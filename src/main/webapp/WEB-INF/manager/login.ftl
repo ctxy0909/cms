@@ -71,7 +71,7 @@
             el:'#mcms-login',
             data:{
                 isRight: true,
-                errorText:"",//错误提示
+                errorText:"",//错误提22222
                 error:"",//输入框错误的显示
                 peopleName:"",//用户名输入框
                 peoplePassword:"",//密码输入框
