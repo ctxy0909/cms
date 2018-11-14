@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.mingsoft.pay.dao.IPayLogDao">
+	
+	<resultMap id="resultMap" type="net.mingsoft.pay.bean.PayLogBean">
+		<id column="ID" property="id" /><!--自增长ID -->
+		<result column="PEOPLE_ID" property="peopleId" /><!--用户id -->
+		<result column="ORDER_NO" property="orderNo" /><!--订单id -->
+		<result column="APP_ID" property="appId" /><!--应用ID -->
+		<result column="LOG_TITLE" property="logTitle" /><!--交易标题 -->
+		<result column="LOG_BALANCE" property="logBalance" /><!--用户当前余额 -->
+		<result column="LOG_MONEY" property="logMoney" /><!--用户交易额 -->
+		<result column="LOG_REMAIN_BALANCE" property="logRemainBalance" /><!--用户交易后剩余余额 -->
+		<result column="LOG_DATE" property="logDate" /><!--交易时间 -->
+		<result column="LOG_TYPE" property="logType" /><!--交易类型，1=支出，2=收入 -->
+		<result column="LOG_PAY_TYPE" property="logPayType" /><!--支付类型 -->
+		<result column="CREATE_BY" property="createBy" /><!--创建人编号 -->
+		<result column="CREATE_DATE" property="createDate" /><!--创建时间 -->
+		<result column="UPDATE_BY" property="updateBy" /><!--更新人员编号 -->
+		<result column="UPDATE_DATE" property="updateDate" /><!--更新时间 -->
+		<result column="log_status" property="logStatus" /><!--交易状态 -->
+		<result column="log_transacation_id" property="logTransactionId" /><!--流水账号 -->
+		<result column="DEL" property="del" /><!--删除标记 -->
+		<result column="people_phone" property="peoplePhone" /><!--手机号码 -->
+		<result column="pu_real_name" property="puRealName" /><!--用户真实名称 -->
+		<result column="pu_nickname" property="puNickname" /><!--用户昵称 -->
+	</resultMap>
+	
+	<!--保存-->	
+	<insert id="saveEntity" useGeneratedKeys="true" keyProperty="id"
+		parameterType="net.mingsoft.pay.entity.PayLogEntity" >
+		insert into mpay_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="peopleId &gt; 0">PEOPLE_ID,</if>
+			<if test="orderNo != null and orderNo != ''">ORDER_NO,</if>
+			<if test="appId &gt; 0">APP_ID,</if>
+			<if test="logTitle != null and logTitle != ''">LOG_TITLE,</if>
+			<if test="logStatus &gt; 0">log_status,</if>
+			<if test="logTransactionId != null and logTransactionId != ''">log_transacation_id,</if>
+			<if test="logBalance != null">LOG_BALANCE,</if>
+			<if test="logMoney != null">LOG_MONEY,</if>
+			<if test="logRemainBalance != null">LOG_REMAIN_BALANCE,</if>
+			<if test="logDate != null">LOG_DATE,</if>
+			<if test="logType &gt; 0">LOG_TYPE,</if>
+			<if test="logPayType != null and logPayType != ''">LOG_PAY_TYPE,</if>
+			<if test="createBy &gt; 0">CREATE_BY,</if>
+			<if test="createDate != null">CREATE_DATE,</if>
+			<if test="updateBy &gt; 0">UPDATE_BY,</if>
+			<if test="updateDate != null">UPDATE_DATE,</if>
+			<if test="del &gt; 0">DEL,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="peopleId &gt; 0">#{peopleId},</if>
+			<if test="orderNo != null and orderNo != ''">#{orderNo},</if>
+			<if test="appId &gt; 0">#{appId},</if>
+			<if test="logTitle != null and logTitle != ''">#{logTitle},</if>
+			<if test="logStatus &gt; 0">#{logStatus},</if>
+			<if test="logTransactionId != null and logTransactionId != ''">#{logTransactionId},</if>
+			<if test="logBalance != null">#{logBalance},</if>
+			<if test="logMoney != null">#{logMoney},</if>
+			<if test="logRemainBalance != null">#{logRemainBalance},</if>
+			<if test="logDate != null">#{logDate},</if>
+			<if test="logType &gt; 0">#{logType},</if>
+			<if test="logPayType != null and logPayType != ''">#{logPayType},</if>
+			<if test="createBy &gt; 0">#{createBy},</if>
+			<if test="createDate != null">#{createDate},</if>
+			<if test="updateBy &gt; 0">#{updateBy},</if>
+			<if test="updateDate != null">#{updateDate},</if>
+			<if test="del &gt; 0">#{del},</if>
+		</trim>
+	</insert>
+	
+	<!--更新-->	
+	<update id="updateEntity" parameterType="net.mingsoft.pay.entity.PayLogEntity">
+		update mpay_log
+		<set>
+			<if test="peopleId &gt; 0">PEOPLE_ID=#{peopleId},</if>			
+			<if test="orderNo != null and orderNo != ''">ORDER_NO=#{orderNo},</if>			
+			<if test="appId &gt; 0">APP_ID=#{appId},</if>			
+			<if test="logTitle != null and logTitle != ''">LOG_TITLE=#{logTitle},</if>			
+			<if test="logStatus &gt; 0">log_status=#{logStatus},</if>			
+			<if test="logTransactionId != null and logTransactionId != ''">log_transacation_id=#{logTransactionId},</if>			
+			<if test="logBalance != null">LOG_BALANCE=#{logBalance},</if>			
+			<if test="logMoney != null">LOG_MONEY=#{logMoney},</if>			
+			<if test="logRemainBalance != null">LOG_REMAIN_BALANCE=#{logRemainBalance},</if>			
+			<if test="logDate != null">LOG_DATE=#{logDate},</if>			
+			<if test="logType &gt; 0">LOG_TYPE=#{logType},</if>			
+			<if test="logPayType != null and logPayType != ''">LOG_PAY_TYPE=#{logPayType},</if>			
+			<if test="createBy &gt; 0">CREATE_BY=#{createBy},</if>			
+			<if test="createDate != null">CREATE_DATE=#{createDate},</if>			
+			<if test="updateBy &gt; 0">UPDATE_BY=#{updateBy},</if>			
+			<if test="updateDate != null">UPDATE_DATE=#{updateDate},</if>			
+			<if test="del &gt; 0">DEL=#{del},</if>			
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<!--根据id获取-->	
+	<select id="getEntity" resultMap="resultMap" parameterType="int">
+		select * from mpay_log ml LEFT JOIN people_user pu 
+		ON ml.people_id = pu.pu_people_id where ml.ID=#{id}
+	</select>
+	
+	<!--根据实体获取-->
+	<select id="getByEntity" resultMap="resultMap" parameterType="net.mingsoft.pay.entity.PayLogEntity">
+		select * from mpay_log ml 
+		LEFT JOIN people_user pu ON ml.people_id=pu.pu_people_id
+		<where>
+			<if test="peopleId &gt; 0"> and ml.PEOPLE_ID=#{peopleId} </if>				
+			<if test="orderNo != null and orderNo != ''"> and ml.ORDER_NO=#{orderNo} </if>				
+			<if test="appId &gt; 0"> and ml.APP_ID=#{appId} </if>				
+			<if test="logTitle != null and logTitle != ''"> and ml.LOG_TITLE=#{logTitle} </if>				
+			<if test="logStatus &gt; 0"> and ml.log_status=#{logStatus} </if>				
+			<if test="logTransactionId != null and logTransactionId != ''"> and ml.log_transacation_id=#{logTransactionId} </if>				
+			<if test="logBalance != null"> and ml.LOG_BALANCE=#{logBalance} </if>				
+			<if test="logMoney != null"> and ml.LOG_MONEY=#{logMoney} </if>				
+			<if test="logRemainBalance != null"> and ml.LOG_REMAIN_BALANCE=#{logRemainBalance} </if>				
+			<if test="logDate != null"> and ml.LOG_DATE=#{logDate} </if>				
+			<if test="logType &gt; 0"> and ml.LOG_TYPE=#{logType} </if>				
+			<if test="logPayType != null and logPayType != ''"> and ml.LOG_PAY_TYPE=#{logPayType} </if>				
+			<if test="createBy &gt; 0"> and ml.CREATE_BY=#{createBy} </if>				
+			<if test="createDate != null"> and ml.CREATE_DATE=#{createDate} </if>				
+			<if test="updateBy &gt; 0"> and ml.UPDATE_BY=#{updateBy} </if>				
+			<if test="updateDate != null"> and ml.UPDATE_DATE=#{updateDate} </if>				
+			<if test="del &gt; 0"> and ml.DEL=#{del} </if>				
+		</where>
+		limit 0,1
+	</select>	
+	
+	
+	<!--删除-->	
+	<delete id="deleteEntity" parameterType="int">
+		delete from mpay_log  where ID=#{id}
+	</delete>	
+	
+	<!--批量删除-->	
+	<delete id="delete" >
+		delete from mpay_log
+		<where>
+			 ID  in <foreach collection="ids" item="item" index="index" 
+			open="(" separator="," close=")">#{item}</foreach>
+		</where>
+	</delete>
+	<!--查询全部-->	
+	<select id="queryAll" resultMap="resultMap">
+		select * from mpay_log order by ID desc
+	</select>
+	<!--条件查询-->	
+	<select id="query" resultMap="resultMap">
+		select * from mpay_log ml 
+		LEFT JOIN people_user pu ON ml.people_id=pu.pu_people_id 
+		<where>
+				<if test="peopleId &gt; 0"> and ml.PEOPLE_ID=#{peopleId} </if>				
+				<if test="orderNo != null and orderNo != ''"> and ml.ORDER_NO=#{orderNo} </if>				
+				<if test="appId &gt; 0"> and ml.APP_ID=#{appId} </if>				
+				<if test="logTitle != null and logTitle != ''"> and ml.LOG_TITLE like CONCAT('%',#{logTitle},'%') </if>				
+				<if test="logStatus &gt; 0"> and ml.log_status=#{logStatus} </if>				
+				<if test="logTransactionId != null and logTransactionId != ''"> and ml.log_transacation_id like	CONCAT('%',#{logTransactionId},'%') </if>				
+				<if test="logBalance != null"> and ml.LOG_BALANCE=#{logBalance} </if>				
+				<if test="logMoney != null"> and ml.LOG_MONEY=#{logMoney} </if>				
+				<if test="logRemainBalance != null"> and ml.LOG_REMAIN_BALANCE=#{logRemainBalance} </if>				
+				<if test="logDate != null"> and ml.LOG_DATE=#{logDate} </if>				
+				<if test="logType &gt; 0"> and ml.LOG_TYPE like CONCAT('%',#{logType},'%') </if>				
+				<if test="logPayType != null and logPayType != ''"> and ml.LOG_PAY_TYPE=#{logPayType} </if>				
+				<if test="createBy &gt; 0"> and ml.CREATE_BY=#{createBy} </if>				
+				<if test="createDate != null"> and ml.CREATE_DATE=#{createDate} </if>				
+				<if test="updateBy &gt; 0"> and ml.UPDATE_BY=#{updateBy} </if>				
+				<if test="updateDate != null"> and ml.UPDATE_DATE=#{updateDate} </if>				
+				<if test="del &gt; 0"> and ml.DEL=#{del} </if>				
+		</where>		
+		order by ml.ID desc
+	</select>
+	
+</mapper>

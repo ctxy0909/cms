@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <#include "${managerViewPath}/include/meta.ftl"/>
-<title><#if app?has_content>${app.appName}<#else>MS</#if>管理系统${managerViewPath}</title>
+<title><#if app?has_content>${app.appName}<#else>智沐</#if>建站${managerViewPath}</title>
 <link rel="shortcut icon" href="${static}/global/images/ms.ico"/>     
 <link rel="bookmark" href="${static}/global/images/ms.icoo"/> 
 <script type="text/javascript" src="http://cdn.mingsoft.net/plugins/vue/2.3.3/vue.min.js"></script>
@@ -18,21 +18,24 @@
 </head>
 <style>
 	.gray{background:#92908E}
+	
+	
 </style>
 <body>
         <#if app?has_content>
         <div id="mcms-login">
-            <img src="${static}/skin/manager/${manager_ui}/images/pic.png" class="login-images login-float" />
-            <div class="login-form-container login-float">
-                <div class="login-title">
-                    <span class="login-chinese-title">账号登录 /</span>
-                    <span class="login-english-title">User login</span>
+           
+            <div class="login-form-container login-float" style="width:640px;height:420px; background-color: rgba(170, 170, 170, 0.29);
+    opacity: 0.9;  border-radius: 6px; border:1px solid #0099ff">
+                <div class="login-title" style="text-align:center;">
+                    <span class="login-chinese-title" style="font-size:26px;" >智沐建站</span>
+                 
                 </div>
 				<div class="ms-login-error-text">
 					<img src="${static}/skin/manager/${manager_ui}/images/error.png" v-show="errorText != ''" />
 					<span v-text="errorText" v-show="errorText != ''"></span>
 				</div>
-                <form class="form-horizontal" id="loginForm" action="${managerPath}/checkLogin.do">
+                <form class="form-horizontal" id="loginForm" action="${managerPath}/checkLogin.do"  style="text-align:center;">
                     <input type="text" maxlength="12" class="login-people-name" :class="{'ms-error':error == 'peopleName'}" id="managerName" name="managerName" @blur="checkPeopleName" @keyup="chanageBackgroundColor" placeholder="用户名" v-model="peopleName" />
                     <input type="password" maxlength="20" class="login-people-name" :class="{'ms-error':error == 'peoplePassword'}" id="managerPassword" name="managerPassword" @blur="checkPeoplePassword" @keyup="chanageBackgroundColor" placeholder="密码" v-model="peoplePassword" />
                     <div class="login-code">

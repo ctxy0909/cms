@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.mingsoft.msend.dao.ISmsDao">
+	
+	<resultMap id="resultMap" type="net.mingsoft.msend.entity.SmsEntity">
+		<id column="app_id" property="appId" /><!--应用编号 -->
+		<result column="sms_type" property="smsType" /><!--短信接口类型 -->
+		<result column="sms_username" property="smsUsername" /><!--账号 -->
+		<result column="sms_password" property="smsPassword" /><!--密码 -->
+		<result column="sms_send_url" property="smsSendUrl" /><!--发送地址 -->
+		<result column="sms_account_url" property="smsAccountUrl" /><!-- -->
+		<result column="sms_manager_url" property="smsManagerUrl" /><!--短信平台后台管理地址 -->
+		<result column="sms_signature" property="smsSignature" /><!--签名 -->
+		<result column="sms_enable" property="smsEnable" /><!--0启用 1禁用 -->
+	</resultMap>
+	
+	<!--保存-->	
+	<insert id="saveEntity" parameterType="net.mingsoft.msend.entity.SmsEntity" >
+		insert into msend_sms
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="appId != null and appId != ''">app_id,</if>
+			<if test="smsType != null and smsType != ''">sms_type,</if>
+			<if test="smsUsername != null and smsUsername != ''">sms_username,</if>
+			<if test="smsPassword != null and smsPassword != ''">sms_password,</if>
+			<if test="smsSendUrl != null and smsSendUrl != ''">sms_send_url,</if>
+			<if test="smsAccountUrl != null and smsAccountUrl != ''">sms_account_url,</if>
+			<if test="smsManagerUrl != null and smsManagerUrl != ''">sms_manager_url,</if>
+			<if test="smsSignature != null and smsSignature != ''">sms_signature,</if>
+			<if test="smsEnable != null">sms_enable,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="appId != null and appId != ''">#{appId},</if>
+			<if test="smsType != null and smsType != ''">#{smsType},</if>
+			<if test="smsUsername != null and smsUsername != ''">#{smsUsername},</if>
+			<if test="smsPassword != null and smsPassword != ''">#{smsPassword},</if>
+			<if test="smsSendUrl != null and smsSendUrl != ''">#{smsSendUrl},</if>
+			<if test="smsAccountUrl != null and smsAccountUrl != ''">#{smsAccountUrl},</if>
+			<if test="smsManagerUrl != null and smsManagerUrl != ''">#{smsManagerUrl},</if>
+			<if test="smsSignature != null and smsSignature != ''">#{smsSignature},</if>
+			<if test="smsEnable != null">#{smsEnable},</if>
+		</trim>
+	</insert>
+	
+	<!--更新-->	
+	<update id="updateEntity" parameterType="net.mingsoft.msend.entity.SmsEntity">
+		update msend_sms
+		<set>
+			<if test="smsType != null and smsType != ''">sms_type=#{smsType},</if>			
+			<if test="smsUsername != null and smsUsername != ''">sms_username=#{smsUsername},</if>			
+			<if test="smsPassword != null and smsPassword != ''">sms_password=#{smsPassword},</if>			
+			<if test="smsSendUrl != null and smsSendUrl != ''">sms_send_url=#{smsSendUrl},</if>			
+			<if test="smsAccountUrl != null and smsAccountUrl != ''">sms_account_url=#{smsAccountUrl},</if>			
+			<if test="smsManagerUrl != null and smsManagerUrl != ''">sms_manager_url=#{smsManagerUrl},</if>			
+			<if test="smsSignature != null and smsSignature != ''">sms_signature=#{smsSignature},</if>			
+			<if test="smsEnable != null">sms_enable=#{smsEnable},</if>			
+		</set>
+		where app_id = #{appId}
+	</update>
+	
+	<!--根据id获取-->	
+	<select id="getEntity" resultMap="resultMap" parameterType="int">
+		select * from msend_sms where app_id=#{appId}
+	</select>
+	
+	<!--根据实体获取-->
+	<select id="getByEntity" resultMap="resultMap" parameterType="net.mingsoft.msend.entity.SmsEntity">
+		select * from msend_sms 
+		<where>
+			<if test="smsType != null and smsType != ''"> and sms_type=#{smsType} </if>				
+			<if test="smsUsername != null and smsUsername != ''"> and sms_username=#{smsUsername} </if>				
+			<if test="smsPassword != null and smsPassword != ''"> and sms_password=#{smsPassword} </if>				
+			<if test="smsSendUrl != null and smsSendUrl != ''"> and sms_send_url=#{smsSendUrl} </if>				
+			<if test="smsAccountUrl != null and smsAccountUrl != ''"> and sms_account_url=#{smsAccountUrl} </if>				
+			<if test="smsManagerUrl != null and smsManagerUrl != ''"> and sms_manager_url=#{smsManagerUrl} </if>				
+			<if test="smsSignature != null and smsSignature != ''"> and sms_signature=#{smsSignature} </if>				
+			<if test="smsEnable != null"> and sms_enable=#{smsEnable} </if>				
+		</where>
+		limit 0,1
+	</select>	
+	
+	
+	<!--删除-->	
+	<delete id="deleteEntity" parameterType="int">
+		delete from msend_sms  where app_id=#{appId}
+	</delete>	
+	
+	<!--批量删除-->	
+	<delete id="delete" >
+		delete from msend_sms
+		<where>
+			 app_id  in <foreach collection="ids" item="item" index="index" 
+			open="(" separator="," close=")">#{item}</foreach>
+		</where>
+	</delete>
+	<!--查询全部-->	
+	<select id="queryAll" resultMap="resultMap">
+		select * from msend_sms order by app_id desc
+	</select>
+	<!--条件查询-->	
+	<select id="query" resultMap="resultMap">
+		select * from msend_sms  
+		<where>
+				<if test="smsType != null and smsType != ''"> and sms_type=#{smsType} </if>				
+				<if test="smsUsername != null and smsUsername != ''"> and sms_username=#{smsUsername} </if>				
+				<if test="smsPassword != null and smsPassword != ''"> and sms_password=#{smsPassword} </if>				
+				<if test="smsSendUrl != null and smsSendUrl != ''"> and sms_send_url=#{smsSendUrl} </if>				
+				<if test="smsAccountUrl != null and smsAccountUrl != ''"> and sms_account_url=#{smsAccountUrl} </if>				
+				<if test="smsManagerUrl != null and smsManagerUrl != ''"> and sms_manager_url=#{smsManagerUrl} </if>				
+				<if test="smsSignature != null and smsSignature != ''"> and sms_signature=#{smsSignature} </if>				
+				<if test="smsEnable != null"> and sms_enable=#{smsEnable} </if>				
+		</where>		
+		order by app_id desc
+	</select>
+	
+</mapper>

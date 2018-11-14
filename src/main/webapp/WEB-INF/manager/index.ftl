@@ -116,7 +116,7 @@
                 </ul>
             </div>
 
-            <div class="ms-top-mstore" data-toggle="tooltip" data-placement="bottom" title="点击进入Mstore">
+            <div class="ms-top-mstore" data-toggle="tooltip" data-placement="bottom" title="点击进入智沐模板中心">
                 <span class="glyphicon glyphicon-th-large animated"></span>
                 <span class="mstore-update"></span>
             </div>
@@ -158,12 +158,10 @@
     <!--左边菜单结束-->
 
     <!--右边开始-->
-    <div class="ms-content">
+    <div class="ms-content" style="background:#0DCC6C;">
         <div class="wellcome">
-            <h2>欢迎进入智沐CMS系统</h2>
-           <!-- <p>欢迎加群： 221335098 或到
-                <a href="http://ms.mingsoft.net/mbbs/main.do" target="_blank" style="text-decoration: none;">官方论坛进行技术交流</a>
-            </p>-->
+            <h2>欢迎进入智沐建站后台管理系统</h2>
+          
         </div>
         <div class="easyui-tabs">
         

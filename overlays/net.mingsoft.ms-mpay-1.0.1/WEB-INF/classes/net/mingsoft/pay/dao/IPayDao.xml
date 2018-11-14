@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.mingsoft.pay.dao.IPayDao">
+	
+	<resultMap id="resultMap" type="net.mingsoft.pay.entity.PayEntity">
+		<id column="pay_id" property="payId" /><!-- -->
+		<result column="app_id" property="appId" /><!--应用编号 -->
+		<result column="pay_type" property="payType" /><!--支付类型 -->
+		<result column="pay_no" property="payNo" /><!--支付宝账号 -->
+		<result column="pay_apitype" property="payApitype" /><!--接口类型，例如支付宝即时倒帐与担保接口 -->
+		<result column="pay_partner" property="payPartner" /><!--合作身份者ID -->
+		<result column="pay_key" property="payKey" /><!--交易安全检验码 -->
+		<result column="pay_secret" property="paySecret" /><!-- 微信secret -->
+		<result column="pay_resource" property="payResource" /><!--资源文件 -->
+		<result column="pay_date" property="payDate" /><!--创建时间 -->
+		<result column="pay_enable" property="payEnable" /><!--0启用 1禁用 -->
+		<result column="pay_app_private_key" property="payAppPrivateKey" /><!--APP支付应用私钥 -->
+		<result column="pay_alipay_public_key" property="payAlipayPublicKey" /><!--APP支付支付宝公钥 -->
+		<result column="pay_app_id" property="payAppId" /><!--APP应用Id -->
+	</resultMap>
+	
+	<!--保存-->	
+	<insert id="saveEntity" useGeneratedKeys="true" keyProperty="payId"
+		parameterType="net.mingsoft.pay.entity.PayEntity" >
+		insert into mpay_pay
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			app_id,
+			<if test="payType != null and payType != ''">pay_type,</if>
+			<if test="payNo != null and payNo != ''">pay_no,</if>
+			<if test="payApitype != null and payApitype != ''">pay_apitype,</if>
+			<if test="payPartner != null and payPartner != ''">pay_partner,</if>
+			<if test="payKey != null and payKey != ''">pay_key,</if>
+			<if test="paySecret != null and paySecret != ''">pay_secret,</if>
+			<if test="payResource != null and payResource != ''">pay_resource,</if>
+			<if test="payDate != null">pay_date,</if>
+			<if test="payEnable != null">pay_enable,</if>
+			<if test="payAlipayPublicKey != null">pay_alipay_public_key,</if>
+			<if test="payAppPrivateKey != null">pay_app_private_key,</if>
+			<if test="payAppId != null">pay_app_id,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{appId},
+			<if test="payType != null and payType != ''">#{payType},</if>
+			<if test="payNo != null and payNo != ''">#{payNo},</if>
+			<if test="payApitype != null and payApitype != ''">#{payApitype},</if>
+			<if test="payPartner != null and payPartner != ''">#{payPartner},</if>
+			<if test="payKey != null and payKey != ''">#{payKey},</if>
+			<if test="paySecret != null and paySecret != ''">#{paySecret},</if>
+			<if test="payResource != null and payResource != ''">#{payResource},</if>
+			<if test="payDate != null">#{payDate},</if>
+			<if test="payEnable != null">#{payEnable},</if>
+			<if test="payAlipayPublicKey != null">#{payAlipayPublicKey},</if>
+			<if test="payAppPrivateKey != null">#{payAppPrivateKey},</if>
+			<if test="payAppId != null">#{payAppId},</if>
+		</trim>
+	</insert>
+	
+	<!--更新-->	
+	<update id="updateEntity" parameterType="net.mingsoft.pay.entity.PayEntity">
+		update mpay_pay
+		<set>
+			<if test="payType != null and payType != ''">pay_type=#{payType},</if>			
+			<if test="payNo != null and payNo != ''">pay_no=#{payNo},</if>			
+			<if test="payApitype != null and payApitype != ''">pay_apitype=#{payApitype},</if>			
+			<if test="payPartner != null and payPartner != ''">pay_partner=#{payPartner},</if>			
+			<if test="payKey != null and payKey != ''">pay_key=#{payKey},</if>			
+			<if test="paySecret != null and paySecret != ''">pay_secret=#{paySecret},</if>		
+			<if test="payResource != null and payResource != ''">pay_resource=#{payResource},</if>			
+			<if test="payDate != null">pay_date=#{payDate},</if>			
+			<if test="payEnable != null">pay_enable=#{payEnable},</if>			
+			<if test="payAlipayPublicKey != null">pay_alipay_public_key=#{payAlipayPublicKey},</if>			
+			<if test="payAppPrivateKey != null">pay_app_private_key=#{payAppPrivateKey},</if>			
+			<if test="payAppId != null">pay_app_id=#{payAppId},</if>			
+		</set>
+		where pay_id = #{payId}
+	</update>
+	
+	<!--根据id获取-->	
+	<select id="getEntity" resultMap="resultMap" parameterType="int">
+		select * from mpay_pay where pay_id=#{payId}
+	</select>
+	
+	<!--根据实体获取-->
+	<select id="getByEntity" resultMap="resultMap" parameterType="net.mingsoft.pay.entity.PayEntity">
+		select * from mpay_pay 
+		<where>
+			app_id = #{appId}
+			<if test="payType != null and payType != ''"> and pay_type=#{payType} </if>				
+			<if test="payNo != null and payNo != ''"> and pay_no=#{payNo} </if>				
+			<if test="payApitype != null and payApitype != ''"> and pay_apitype=#{payApitype} </if>				
+			<if test="payPartner != null and payPartner != ''"> and pay_partner=#{payPartner} </if>				
+			<if test="payKey != null and payKey != ''"> and pay_key=#{payKey} </if>	
+			<if test="paySecret != null and paySecret != ''">pay_secret=#{paySecret},</if>			
+			<if test="payResource != null and payResource != ''"> and pay_resource=#{payResource} </if>				
+			<if test="payDate != null"> and pay_date=#{payDate} </if>				
+			<if test="payEnable != null"> and pay_enable=#{payEnable} </if>		
+			<if test="payAlipayPublicKey != null">pay_alipay_public_key=#{payAlipayPublicKey},</if>			
+			<if test="payAppPrivateKey != null">pay_app_private_key=#{payAppPrivateKey},</if>	
+			<if test="payAppId != null">pay_app_id=#{payAppId},</if>	
+		</where>
+		limit 0,1
+	</select>	
+	
+	
+	<!--删除-->	
+	<delete id="deleteEntity" parameterType="int">
+		delete from mpay_pay  where pay_id=#{payId}
+	</delete>	
+	
+	<!--批量删除-->	
+	<delete id="delete" >
+		delete from mpay_pay
+		<where>
+			 pay_id  in <foreach collection="ids" item="item" index="index" 
+			open="(" separator="," close=")">#{item}</foreach>
+		</where>
+	</delete>
+	<!--查询全部-->	
+	<select id="queryAll" resultMap="resultMap">
+		select * from mpay_pay order by pay_id desc
+	</select>
+	<!--条件查询-->	
+	<select id="query" resultMap="resultMap">
+		select * from mpay_pay  
+		<where>
+				app_id = #{appId}
+				<if test="payType != null and payType != ''"> and pay_type=#{payType} </if>				
+				<if test="payNo != null and payNo != ''"> and pay_no=#{payNo} </if>				
+				<if test="payApitype != null and payApitype != ''"> and pay_apitype=#{payApitype} </if>				
+				<if test="payPartner != null and payPartner != ''"> and pay_partner=#{payPartner} </if>				
+				<if test="payKey != null and payKey != ''"> and pay_key=#{payKey} </if>		
+				<if test="paySecret != null and paySecret != ''">pay_secret=#{paySecret},</if>		
+				<if test="payResource != null and payResource != ''"> and pay_resource=#{payResource} </if>				
+				<if test="payDate != null"> and pay_date=#{payDate} </if>				
+				<if test="payEnable != null"> and pay_enable=#{payEnable} </if>	
+				<if test="payAlipayPublicKey != null">pay_alipay_public_key=#{payAlipayPublicKey},</if>			
+				<if test="payAppPrivateKey != null">pay_app_private_key=#{payAppPrivateKey},</if>	
+				<if test="payAppId != null">pay_app_id=#{payAppId},</if>		
+		</where>		
+		order by pay_id desc
+	</select>
+	
+</mapper>

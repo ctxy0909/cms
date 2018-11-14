@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.mingsoft.msend.dao.IMailDao">
+	
+	<resultMap id="resultMap" type="net.mingsoft.msend.entity.MailEntity">
+		<id column="app_id" property="appId" /><!--应用编号 -->
+		<result column="mail_type" property="mailType" /><!--邮件类型 -->
+		<result column="mail_name" property="mailName" /><!--账号 -->
+		<result column="mail_password" property="mailPassword" /><!-- -->
+		<result column="mail_port" property="mailPort" /><!-- -->
+		<result column="mail_server" property="mailServer" /><!--服务器 -->
+		<result column="mail_form" property="mailForm" /><!-- -->
+		<result column="mail_form_name" property="mailFormName" /><!-- -->
+		<result column="mail_enable" property="mailEnable" /><!--0启用 1禁用 -->
+	</resultMap>
+	
+	<!--保存-->	
+	<insert id="saveEntity"  parameterType="net.mingsoft.msend.entity.MailEntity" >
+		insert into msend_mail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="appId != null and appId != ''">app_id,</if>
+			<if test="mailType != null and mailType != ''">mail_type,</if>
+			<if test="mailName != null and mailName != ''">mail_name,</if>
+			<if test="mailPassword != null and mailPassword != ''">mail_password,</if>
+			<if test="mailPort != null">mail_port,</if>
+			<if test="mailServer != null and mailServer != ''">mail_server,</if>
+			<if test="mailForm != null and mailForm != ''">mail_form,</if>
+			<if test="mailFormName != null and mailFormName != ''">mail_form_name,</if>
+			<if test="mailEnable != null">mail_enable,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="appId != null and appId != ''">#{appId},</if>
+			<if test="mailType != null and mailType != ''">#{mailType},</if>
+			<if test="mailName != null and mailName != ''">#{mailName},</if>
+			<if test="mailPassword != null and mailPassword != ''">#{mailPassword},</if>
+			<if test="mailPort != null">#{mailPort},</if>
+			<if test="mailServer != null and mailServer != ''">#{mailServer},</if>
+			<if test="mailForm != null and mailForm != ''">#{mailForm},</if>
+			<if test="mailFormName != null and mailFormName != ''">#{mailFormName},</if>
+			<if test="mailEnable != null">#{mailEnable},</if>
+		</trim>
+	</insert>
+	
+	<!--更新-->	
+	<update id="updateEntity" parameterType="net.mingsoft.msend.entity.MailEntity">
+		update msend_mail
+		<set>
+			<if test="mailType != null and mailType != ''">mail_type=#{mailType},</if>			
+			<if test="mailName != null and mailName != ''">mail_name=#{mailName},</if>			
+			<if test="mailPassword != null and mailPassword != ''">mail_password=#{mailPassword},</if>			
+			<if test="mailPort != null">mail_port=#{mailPort},</if>			
+			<if test="mailServer != null and mailServer != ''">mail_server=#{mailServer},</if>			
+			<if test="mailForm != null and mailForm != ''">mail_form=#{mailForm},</if>			
+			<if test="mailFormName != null and mailFormName != ''">mail_form_name=#{mailFormName},</if>			
+			<if test="mailEnable != null">mail_enable=#{mailEnable},</if>			
+		</set>
+		where app_id = #{appId}
+	</update>
+	
+	<!--根据id获取-->	
+	<select id="getEntity" resultMap="resultMap" parameterType="int">
+		select * from msend_mail where app_id=#{appId}
+	</select>
+	
+	<!--根据实体获取-->
+	<select id="getByEntity" resultMap="resultMap" parameterType="net.mingsoft.msend.entity.MailEntity">
+		select * from msend_mail 
+		<where>
+			<if test="mailType != null and mailType != ''"> and mail_type=#{mailType} </if>				
+			<if test="mailName != null and mailName != ''"> and mail_name=#{mailName} </if>				
+			<if test="mailPassword != null and mailPassword != ''"> and mail_password=#{mailPassword} </if>				
+			<if test="mailPort != null"> and mail_port=#{mailPort} </if>				
+			<if test="mailServer != null and mailServer != ''"> and mail_server=#{mailServer} </if>				
+			<if test="mailForm != null and mailForm != ''"> and mail_form=#{mailForm} </if>				
+			<if test="mailFormName != null and mailFormName != ''"> and mail_form_name=#{mailFormName} </if>				
+			<if test="mailEnable != null"> and mail_enable=#{mailEnable} </if>				
+		</where>
+		limit 0,1
+	</select>	
+	
+	
+	<!--删除-->	
+	<delete id="deleteEntity" parameterType="int">
+		delete from msend_mail  where app_id=#{appId}
+	</delete>	
+	
+	<!--批量删除-->	
+	<delete id="delete" >
+		delete from msend_mail
+		<where>
+			 app_id  in <foreach collection="ids" item="item" index="index" 
+			open="(" separator="," close=")">#{item}</foreach>
+		</where>
+	</delete>
+	<!--查询全部-->	
+	<select id="queryAll" resultMap="resultMap">
+		select * from msend_mail order by app_id desc
+	</select>
+	<!--条件查询-->	
+	<select id="query" resultMap="resultMap">
+		select * from msend_mail  
+		<where>
+				<if test="mailType != null and mailType != ''"> and mail_type=#{mailType} </if>				
+				<if test="mailName != null and mailName != ''"> and mail_name=#{mailName} </if>				
+				<if test="mailPassword != null and mailPassword != ''"> and mail_password=#{mailPassword} </if>				
+				<if test="mailPort != null"> and mail_port=#{mailPort} </if>				
+				<if test="mailServer != null and mailServer != ''"> and mail_server=#{mailServer} </if>				
+				<if test="mailForm != null and mailForm != ''"> and mail_form=#{mailForm} </if>				
+				<if test="mailFormName != null and mailFormName != ''"> and mail_form_name=#{mailFormName} </if>				
+				<if test="mailEnable != null"> and mail_enable=#{mailEnable} </if>				
+		</where>		
+		order by app_id desc
+	</select>
+	
+</mapper>

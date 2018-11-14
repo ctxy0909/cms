@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.mingsoft.attention.dao.IBasicAttentionDao">
+	<sql id="column_list">
+		ba.ba_id,ba.ba_people_id,ba.ba_basic_id,ba.ba_app_id,ba.ba_type,ba.ba_datetime,b.basic_title,b.ba_url
+	</sql>
+
+	<!-- 注入关注字段开始 -->
+	<resultMap id="resultMap"
+		type="net.mingsoft.attention.entity.BasicAttentionEntity">
+		<id column="BA_ID" property="basicAttentionId" />
+		<result column="BA_PEOPLE_ID" property="basicAttentionPeopleId" />
+		<result column="BA_BASIC_ID" property="basicAttentionBasicId" />
+		<result column="BA_APP_ID" property="basicAttentionAppId" />
+		<result column="BA_TYPE" property="basicAttentionType" />
+		<result column="BA_DATETIME" property="basicAttentionTime" />
+		<result column="BA_URL" property="basicAttentionUrl" />
+	</resultMap>
+
+	<resultMap id="resultMapBasic" type="net.mingsoft.attention.entity.BasicAttentionEntity">
+		<id column="BA_ID" property="basicAttentionId" />
+		<result column="BA_PEOPLE_ID" property="basicAttentionPeopleId" />
+		<result column="BA_BASIC_ID" property="basicAttentionBasicId" />
+		<result column="BA_APP_ID" property="basicAttentionAppId" />
+		<result column="BA_TYPE" property="basicAttentionType" />
+		<result column="BA_DATETIME" property="basicAttentionTime" />
+		<result column="BA_URL" property="basicAttentionUrl" />
+		<result column="BASIC_MODELID" property="basicModelId" />
+		<association column="BA_BASIC_ID" property="basicEntity"
+			javaType="com.mingsoft.basic.entity.BasicEntity">
+			<id column="BASIC_ID" property="basicId" />
+			<result column="BASIC_TITLE" property="basicTitle" />
+			<result column="BASIC_DESCRIPTION" property="basicDescription" />
+			<result column="BASIC_THUMBNAILS" property="basicThumbnails" />
+			<result column="BASIC_HIT" property="basicHit" />
+			<result column="BASIC_DATETIME" property="basicDateTime" />
+			<result column="BASIC_UPDATETIME" property="basicUpdateTime" />
+			<result column="BASIC_PEOPLEID" property="basicPeopleId" />
+			<result column="BASIC_CATEGORYID" property="basicCategoryId" />
+			<result column="BASIC_APPID" property="basicAppId" />
+		</association>
+	</resultMap>
+	<!-- 注入关注字段结束 -->
+
+	<!-- 添加关注信息开始 -->
+	<insert id="saveEntity" useGeneratedKeys="true" keyProperty="basicAttentionId"
+		parameterType="com.mingsoft.base.entity.BaseEntity">
+		insert into BASIC_ATTENTION
+		<!-- 添加表字段 -->
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="basicAttentionPeopleId != null">BA_PEOPLE_ID,</if>
+			<if test="basicAttentionBasicId != null">BA_BASIC_ID,</if>
+			<if test="basicAttentionAppId != null">BA_APP_ID,</if>
+			<if test="basicAttentionType !=null">BA_TYPE,</if>
+			<if test="basicAttentionTime !=null">BA_DATETIME,</if>
+			<if test="basicAttentionUrl !=null">BA_Url,</if>
+		</trim>
+
+		<!-- 注入控制层字段 -->
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="basicAttentionPeopleId !=  null">#{basicAttentionPeopleId},</if>
+			<if test="basicAttentionBasicId != null">#{basicAttentionBasicId},</if>
+			<if test="basicAttentionAppId != null">#{basicAttentionAppId},</if>
+			<if test="basicAttentionType !=null">#{basicAttentionType},</if>
+			<if test="basicAttentionTime !=null">#{basicAttentionTime},</if>
+			<if test="basicAttentionUrl !=null">#{basicAttentionUrl},</if>
+		</trim>
+	</insert>
+
+	<!-- 根据basicId,关注类型,用户ID,AppId查询(查询用户是否收藏过该商品)开始 -->
+	<select id="getEntityByPeopleAttention" resultMap="resultMap">
+		select * from basic_attention where 1=1
+		<if test="basicAttention != null">
+			and ba_people_id = #{basicAttention.basicAttentionPeopleId}
+			and ba_basic_id = #{basicAttention.basicAttentionBasicId}
+			and ba_app_id
+			= #{basicAttention.basicAttentionAppId}
+			and ba_type =
+			#{basicAttention.basicAttentionType}
+		</if>
+	</select>
+	<!-- 根据basicId,关注类型,用户ID,AppId查询结束 -->
+
+	<!-- 根据用户ID和APPID查询用户关注内容列表开始(带分页) 过期-->
+	<select id="queryPageByPeopleIdAndAppId" resultType="java.util.HashMap">
+		select * from
+		<choose>
+			<when test="modelId !=null  and modelId=54">
+				v_attention_product
+			</when>
+			<when test="modelId !=null  and modelId=8">
+				v_attention_article
+			</when>
+		</choose>
+		<where>
+			<if test="peopleId != null">and ba_people_id=#{peopleId}</if>
+			<if test="appId != null">and ba_app_id=#{appId}</if>
+			<if test="attentionType != null">and ba_type=#{attentionType}</if>
+		</where>
+		order by ba_id desc
+		<if test="page != null">
+			limit ${page.pageNo*page.pageSize},#{page.pageSize};
+		</if>
+	</select>
+	<select id="queryCountByPeopleIdAndAppId" resultType="int">
+		select count(*) from basic_attention ba
+		left join basic b on
+		ba.ba_basic_id = b.basic_id
+		where 1=1
+		<if test="peopleId != null">and ba.ba_people_id=#{peopleId}</if>
+		<if test="appId != null">and ba.ba_app_id=#{appId}</if>
+		<if test="attentionType != null">and ba.ba_type=#{attentionType}</if>
+		<if test="modelId != null">and b.basic_modelid=#{modelId}</if>
+	</select>
+	<!-- 根据用户ID和APPID查询用户关注内容列表结束 -->
+	
+	<!-- 查询列表-->
+	<select id="query" parameterType="net.mingsoft.attention.entity.BasicAttentionEntity" resultMap="resultMapBasic">
+		select * from basic_attention ba
+		left join basic b on
+		ba.ba_basic_id = b.basic_id
+		<where>
+			and ba.BA_PEOPLE_ID=#{basicAttentionPeopleId}
+			<if test="basicAttentionType &gt; 0">and ba.ba_type=#{basicAttentionType}</if>
+			<if test="basicModelId &gt; 0">and b.BASIC_MODELID=#{basicModelId}</if>
+		</where>
+	</select>
+	
+	<select id="count" parameterType="net.mingsoft.attention.entity.BasicAttentionEntity" resultType="int">
+		select count(*) from basic_attention ba
+		left join basic b on
+		ba.ba_basic_id = b.basic_id
+		<where>
+			<if test="basicAttentionType &gt; 0">and ba.ba_type=#{basicAttentionType}</if>
+			<if test="basicModelId &gt; 0">and b.BASIC_MODELID=#{basicModelId}</if>
+			<if test="basicAttentionBasicId &gt; 0">and ba.BA_BASIC_ID=#{basicAttentionBasicId}</if>
+		</where>
+	</select>
+
+	<!-- 删除关注信息开始 -->
+	<delete id="deleteEntity" parameterType="int">
+		delete from
+		basic_attention
+		where ba_id = #{basicAttentionId}
+	</delete>
+	<!-- 删除关注信息结束 -->
+	
+	<!-- 根据用户id收藏id删除多条收藏开始 -->
+	<delete id="delete" parameterType="List">
+		DELETE  FROM basic_attention
+		<where>
+			and BA_TYPE = #{basicAttentionType}
+			<if test="peopleId &gt; 0">
+			and BA_PEOPLE_ID = #{peopleId}
+			</if>
+    		and ba_basic_id in <foreach collection="ids" item="item" index="index" 
+			open="(" separator="," close=")">#{item}</foreach>
+		</where>
+	</delete>
+	<!-- 根据收藏id删除多条收藏结束 -->
+</mapper>

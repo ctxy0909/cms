@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<#include "/manager/include/macro.ftl"/>
+  	<#include "/manager/include/meta.ftl"/>
+</head>
+<body>
+	<@ms.content>
+		<@ms.contentBody >
+			<#if weixin?has_content>
+				<@ms.nav title="文章列表" back=true></@ms.nav>
+				
+			<#else>
+				
+			</#if>
+			<@ms.contentPanel>
+				<@ms.form isvalidation=true name="weixinForm" class="form-inline" style="height:100%;" action="${basePath}/manager/weixin/save.do">
+		    		<@ms.text labelStyle="width:17%" name="weixinNO" style="width: 20%;"  label="微信号:" value="" title="微信号" placeholder="请输入微信号"  validation={"required":"true","maxlength":"30","data-bv-stringlength-message":"微信号在30个字符以内!", "data-bv-notempty-message":"必填项目"}/>
+		    		<@ms.text labelStyle="width:17%" name="weixinOriginId" style="width:20% ;"  label="微信原始ID:" value="" title="微信原始ID" placeholder="请输入微信原始ID" validation={"required":"true", "maxlength":"30","data-bv-stringlength-message":"微信原始ID在30个字符以内!","data-bv-notempty-message":"必填项目"}/>
+		    		<@ms.text labelStyle="width:17%" name="weixinName" style="width: 20%;"  label="公众号名称:" value="" title="公众号名称:" placeholder="请输入公众号名称"  validation={"required":"true","maxlength":"30","data-bv-stringlength-message":"公众号名称在30个字符以内!", "data-bv-notempty-message":"必填项目"}/>
+		    		<@ms.select labelStyle="width:17%" name="weixinType" style="width: 20%;padding: 0 0 0 8px;"  label="微信类型:" list={"0":"服务号","1":"订阅号"}  value="" listKey="weixinType" listValue="weixinTypeValue" validation={"required":"true", "data-bv-notempty-message":"必填项目"} />			
+		    		<@ms.text labelStyle="width:17%" name="weixinAppID" style="width: 32%;"  label="微信应用编号:" value="" title="微信应用编号" placeholder="请输入微应用编号"  validation={"required":"true","maxlength":"150","data-bv-stringlength-message":"应用编号在150个字符以内!", "data-bv-notempty-message":"必填项目"}/>
+		    		<@ms.text labelStyle="width:17%" name="weixinAppSecret" style="width: 32%;"  label="应用授权码:" value="" title="应用授权码" placeholder="请输入应用授权码"  validation={"required":"true","maxlength":"150","data-bv-stringlength-message":"授权码在150个字符以内!", "data-bv-notempty-message":"必填项目"}/>
+		    		<@ms.text labelStyle="width:17%" name="weixinToken" style="width: 32%;" label="微信token:" value="" title="微信token" placeholder="请输入微信token" validation={"maxlength":"30","data-bv-stringlength-message":"微信toke在30个字符以内!"} />
+		    		<@ms.text labelStyle="width:17%" name="weixinPayKey" style="width: 32%;" label="微信支付key:" value="" title="微信支付key" placeholder="请输入微信支付key"  validation={"maxlength":"255","data-bv-stringlength-message":"支付key在255个字符以内!"}/>
+		    		<@ms.text labelStyle="width:17%" name="weixinPayMchId" style="width: 32%;" label="微信支付mchid:" value="" title="微信支付mchid" placeholder="请输入微信支付mchid" validation={"maxlength":"255","data-bv-stringlength-message":"支付mchid在255个字符以内!"}/>
+		    		<@ms.text labelStyle="width:17%" name="weixinProxyUrl" style="width: 32%;" label="映射内网测试网地址:" value="" title="映射内网测试网地址" placeholder="请输入映射内网测试网地址" validation={"maxlength":"500","data-bv-stringlength-message":"测试网地址500个字符以内!"}/>
+		    		<@ms.text labelStyle="width:17%" name="weixinOauthUrl" style="width: 32%;" label="网页2.0授权跳转地址:" value="" title="网页2.0授权跳转地址" placeholder="请输入网页2.0授权跳转地址" validation={"maxlength":"200","data-bv-stringlength-message":"跳转地址在200个字符以内!"}/>
+		    		<!--==============上传头像==============-->
+	            	<div class="form-group margin20">
+            			<label style="width:17%" class="col-md-3 control-label col-xs-3">上传头像:</label>
+            			<div style="padding-left:0" class="col-md-4 uploadImg col-xs-4">
+            				<#if weixin?has_content>
+        						<@uploadImg path="upload/weixin/${appId}/" inputName="weixinHeadImg" size="1" filetype="" msg="头像缩略图"  maxSize="1" imgs="${weixin.weixinHeadImg?default('')}" />
+        					<#else>
+        						<@uploadImg path="upload/weixin/${appId}/" inputName="weixinHeadImg" size="1" filetype="" msg="头像缩略图"  maxSize="1" imgs="" />
+        					</#if>
+            			</div>
+	            	</div>
+	    			<!--==============生成二维码==============-->
+	            	<div class="form-group margin20">
+            			<label style="width:17%"  class="control-label col-xs-3">上传二维码:</label>
+            			<div style="padding-left:0" class="col-md-4 uploadImg col-xs-4">
+	            			<#if weixin?has_content>
+	        					<@uploadImg path="upload/weixin/${appId}/" inputName="weixinImage" size="1" filetype="" msg="二维码缩略图"  maxSize="1" imgs="${weixin.weixinImage?default('')}" />
+	    					<#else>
+	        					<@uploadImg path="upload/weixin/${appId}/" inputName="weixinImage" size="1" filetype="" msg="二维码缩略图"  maxSize="1" imgs="" />
+	        				</#if>
+            			</div>
+	            	</div>
+		    	</@ms.form>
+			</@ms.contentPanel>		
+		</@ms.contentBody>
+	</@ms.content> 
+<script>
+	<#if weixin?has_content>
+		$("input[name='weixinToken']").val("${weixin.weixinToken?default('')}");
+		$("input[name='weixinToken']").attr("readonly","readonly");
+		$("select[name='weixinType']").find("option[value='${weixin.weixinType?c?default(0)}']").attr("selected",true);
+		$("input[name='weixinNO']").val("${weixin.weixinNO?default('')}");
+		$("input[name='weixinOriginId']").val("${weixin.weixinOriginId?default('')}");
+		$("input[name='weixinName']").val("${weixin.weixinName?default('')}");
+		$("input[name='weixinAppID']").val("${weixin.weixinAppID?default('')}");
+		$("input[name='weixinAppSecret']").val("${weixin.weixinAppSecret?default('')}");
+		$("input[name='weixinToken']").val("${weixin.weixinToken?default('')}");
+		$("input[name='weixinPayKey']").val("${weixin.weixinPayKey?default('')}");
+		$("input[name='weixinPayMchId']").val("${weixin.weixinPayMchId?default('')}");
+		$("input[name='weixinProxyUrl']").val("${weixin.weixinProxyUrl?default('')}");
+		$("input[name='weixinOauthUrl']").val("${weixin.weixinOauthUrl?default('')}");
+		$("#weixinForm").attr("action","${basePath}/manager/weixin/"+${weixin.weixinId}+"/update.do");
+	</#if>
+	
+	$(function() {
+		//点击保存或更新按钮进行保存
+		$("#saveOrUpdateWeixin").click(function(){
+			//表单验证开始
+			var vobj = $("#weixinForm").data('bootstrapValidator').validate();
+			if(vobj.isValid()){
+				//判断授权地址合法性
+				var weixinOauthUrl = $.trim($("input[name='weixinOauthUrl']").val());
+				if(weixinOauthUrl!="" && weixinOauthUrl!=undefined){
+					weixinOauthUrl = weixinOauthUrl.match(/http:\/\/.+/);
+					if(weixinOauthUrl == null){
+						<@ms.notify msg="请输入http格式的内网地址!" type="warning"/>
+						return;
+					}
+				}
+				$("#saveOrUpdateWeixin").text("更新中");				
+				$(this).postForm("#weixinForm",{func:function(msg) {
+					if (msg.result == true) {
+			     		<#if weixin?has_content>
+			     			<@ms.notify msg="更新成功" type="success"/>
+			     			$("#saveOrUpdateWeixin").text("更新");
+		     			<#else>
+		     				$("#saveOrUpdateWeixin").attr("disabled", true);
+			     			<@ms.notify msg="保存成功" type="success"/>
+			     			location.href = "${basePath}/manager/weixin/list.do"; 	
+			     		</#if>		     					    		
+			    	}else{
+			    		alert("请重试!");
+			    	}
+				}});
+			}
+		});
+	});
+</script>
+</body>
+</html>
+
+

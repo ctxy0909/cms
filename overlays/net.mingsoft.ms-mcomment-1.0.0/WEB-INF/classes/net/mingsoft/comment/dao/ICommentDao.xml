@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.mingsoft.comment.dao.ICommentDao">
+	
+	<resultMap id="resultMap" type="net.mingsoft.comment.bean.CommentBean">
+		<id column="COMMENT_ID" property="commentId" /><!--评论id（主键） -->
+		<result column="COMMENT_COMMENTID" property="commentCommentId" /><!--父评论id -->
+		<result column="COMMENT_CONTENT" property="commentContent" /><!--评论的内容 -->
+		<result column="COMMENT_PICTURE" property="commentPicture" /><!--评论时发布的图片，可上传多张图片 -->
+		<result column="COMMENT_TIME" property="commentTime" /><!--评论时间 -->
+		<result column="COMMENT_TYPE" property="commentType" /><!--评论的类型：1 匿名，2 公开，默认为公开 -->
+		<result column="COMMENT_PEOPLEID" property="commentPeopleId" /><!--评论者id，默认为非会员用户（即游客） -->
+		<result column="COMMENT_POINTS" property="commentPoints" /><!--评价打分（-1至5分） -->
+		<result column="COMMENT_BASICID" property="commentBasicId" /><!--（文章、商品...）绑定basicid（外键） -->
+		<result column="COMMENT_APPID" property="commentAppId" /><!--(文章、商品）绑定的应用编号 -->
+		<result column="COMMENT_FILE_NAME" property="commentFileName" /><!--附件文件名称 -->
+		<result column="COMMENT_FILE_PATH" property="commentFilePath" /><!--附件文件路径 -->
+		<result column="COMMENT_IS_ANONYMOUS" property="isAnonymous" /><!--是否匿名 -->
+		<result column="COMMENT_AUDIT" property="commentAudit" /><!--0默认显示 1:审核不通过 -->
+		<result column="BASIC_TITLE" property="basicTitle" />
+		<result column="PEOPLE_PHONE" property="peoplePhone" /><!-- 将实体的peoplePhone属性与表的peoplePhone字段对接 -->
+		<result column="PEOPLE_NAME" property="peopleName" /><!-- 将实体的peopleName属性与表的peopleName字段对接 -->
+		<result column="PU_ICON" property="puIcon"/>
+		<result column="PU_NICKNAME" property="puNickname"/>
+	</resultMap>
+	
+	<!--保存-->	
+	<insert id="saveEntity" useGeneratedKeys="true" keyProperty="commentId"
+		parameterType="net.mingsoft.comment.entity.CommentEntity" >
+		insert into comment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="commentCommentId &gt; -1">COMMENT_COMMENTID,</if>
+			<if test="commentContent != null and commentContent != ''">COMMENT_CONTENT,</if>
+			<if test="commentPicture != null and commentPicture != ''">COMMENT_PICTURE,</if>
+			<if test="commentTime != null">COMMENT_TIME,</if>
+			<if test="commentType &gt; 0">COMMENT_TYPE,</if>
+			<if test="commentPeopleId &gt; 0">COMMENT_PEOPLEID,</if>
+			<if test="commentPoints &gt; 0">COMMENT_POINTS,</if>
+			<if test="commentBasicId &gt; 0">COMMENT_BASICID,</if>
+			<if test="commentAppId &gt; 0">COMMENT_APPID,</if>
+			<if test="commentFileName != null and commentFileName != ''">COMMENT_FILE_NAME,</if>
+			<if test="commentFilePath != null and commentFilePath != ''">COMMENT_FILE_PATH,</if>
+			<if test="isAnonymous &gt; 0">COMMENT_IS_ANONYMOUS,</if>
+			<if test="commentAudit &gt; 0">COMMENT_AUDIT,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="commentCommentId &gt; -1">#{commentCommentId},</if>
+			<if test="commentContent != null and commentContent != ''">#{commentContent},</if>
+			<if test="commentPicture != null and commentPicture != ''">#{commentPicture},</if>
+			<if test="commentTime != null">#{commentTime},</if>
+			<if test="commentType &gt; 0">#{commentType},</if>
+			<if test="commentPeopleId &gt; 0">#{commentPeopleId},</if>
+			<if test="commentPoints &gt; 0">#{commentPoints},</if>
+			<if test="commentBasicId &gt; 0">#{commentBasicId},</if>
+			<if test="commentAppId &gt; 0">#{commentAppId},</if>
+			<if test="commentFileName != null and commentFileName != ''">#{commentFileName},</if>
+			<if test="commentFilePath != null and commentFilePath != ''">#{commentFilePath},</if>
+			<if test="isAnonymous &gt; 0">#{isAnonymous},</if>
+			<if test="commentAudit &gt; 0">#{commentAudit},</if>
+		</trim>
+	</insert>
+	
+	<!--更新-->	
+	<update id="updateEntity" parameterType="net.mingsoft.comment.entity.CommentEntity">
+		update comment
+		<set>
+			<if test="commentCommentId &gt; 0">COMMENT_COMMENTID=#{commentCommentId},</if>			
+			<if test="commentContent != null and commentContent != ''">COMMENT_CONTENT=#{commentContent},</if>			
+			<if test="commentPicture != null and commentPicture != ''">COMMENT_PICTURE=#{commentPicture},</if>			
+			<if test="commentTime != null">COMMENT_TIME=#{commentTime},</if>			
+			<if test="commentType &gt; 0">COMMENT_TYPE=#{commentType},</if>			
+			<if test="commentPeopleId &gt; 0">COMMENT_PEOPLEID=#{commentPeopleId},</if>			
+			<if test="commentPoints &gt; 0">COMMENT_POINTS=#{commentPoints},</if>			
+			<if test="commentBasicId &gt; 0">COMMENT_BASICID=#{commentBasicId},</if>			
+			<if test="commentAppId &gt; 0">COMMENT_APPID=#{commentAppId},</if>			
+			<if test="commentFileName != null and commentFileName != ''">COMMENT_FILE_NAME=#{commentFileName},</if>			
+			<if test="commentFilePath != null and commentFilePath != ''">COMMENT_FILE_PATH=#{commentFilePath},</if>			
+			<if test="isAnonymous &gt; 0">COMMENT_IS_ANONYMOUS=#{isAnonymous},</if>			
+			<if test="commentAudit &gt; 0">COMMENT_AUDIT=#{commentAudit},</if>			
+		</set>
+		where COMMENT_ID = #{commentId}
+	</update>
+	
+	<!--根据id获取-->	
+	<select id="getEntity" resultMap="resultMap" parameterType="int">
+		select * from comment c left join basic b on b.BASIC_ID = c.COMMENT_BASICID
+		left join people p on p.PEOPLE_ID = c.COMMENT_PEOPLEID 
+		left join people_user on pu_people_id=p.PEOPLE_ID 
+		where c.COMMENT_ID=#{commentId}
+	</select>
+	
+	<!--根据实体获取-->
+	<select id="getByEntity" resultMap="resultMap" parameterType="net.mingsoft.comment.entity.CommentEntity">
+		select * from comment c left join basic b on b.BASIC_ID = c.COMMENT_BASICID
+		left join people p on p.PEOPLE_ID = c.COMMENT_PEOPLEID left join people_user on pu_people_id=p.PEOPLE_ID 
+		<where>
+			<if test="commentCommentId &gt; 0"> and c.COMMENT_COMMENTID=#{commentCommentId} </if>				
+			<if test="commentContent != null and commentContent != ''"> and c.COMMENT_CONTENT=#{commentContent} </if>				
+			<if test="commentPicture != null and commentPicture != ''"> and c.COMMENT_PICTURE=#{commentPicture} </if>				
+			<if test="commentTime != null"> and c.COMMENT_TIME=#{commentTime} </if>				
+			<if test="commentType &gt; 0"> and c.COMMENT_TYPE=#{commentType} </if>				
+			<if test="commentPeopleId &gt; 0"> and c.COMMENT_PEOPLEID=#{commentPeopleId} </if>				
+			<if test="commentPoints &gt; 0"> and c.COMMENT_POINTS=#{commentPoints} </if>				
+			<if test="commentBasicId &gt; 0"> and c.COMMENT_BASICID=#{commentBasicId} </if>				
+			<if test="commentAppId &gt; 0"> and c.COMMENT_APPID=#{commentAppId} </if>				
+			<if test="commentFileName != null and commentFileName != ''"> and c.COMMENT_FILE_NAME=#{commentFileName} </if>				
+			<if test="commentFilePath != null and commentFilePath != ''"> and c.COMMENT_FILE_PATH=#{commentFilePath} </if>				
+			<if test="isAnonymous &gt; 0"> and c.COMMENT_IS_ANONYMOUS=#{isAnonymous} </if>				
+			<if test="commentAudit &gt; 0"> and c.COMMENT_AUDIT=#{commentAudit} </if>				
+		</where>
+		limit 0,1
+	</select>	
+	
+	
+	<!--删除-->	
+	<delete id="deleteEntity" parameterType="int">
+		delete from comment  where COMMENT_ID=#{commentId}
+	</delete>	
+	<!-- 批量更新未发布 -->
+	<update id="updateBatch">
+        update comment set comment_audit=#{commentAudit}
+		<where>
+			 comment_id  in <foreach collection="ids" item="item" index="index" 
+			open="(" separator="," close=")">#{item}</foreach>
+		</where>
+    </update>
+	
+	<!--批量删除-->	
+	<delete id="delete" >
+		delete from comment
+		<where>
+			 COMMENT_ID  in <foreach collection="ids" item="item" index="index" 
+			open="(" separator="," close=")">#{item}</foreach>
+		</where>
+	</delete>
+	<!--查询全部-->	
+	<select id="queryAll" resultMap="resultMap">
+		select * from comment order by COMMENT_ID desc
+	</select>
+	<!--条件查询-->	
+	<select id="query" resultMap="resultMap">
+		select * from comment c left join basic b on b.BASIC_ID = c.COMMENT_BASICID
+		left join people p on p.PEOPLE_ID = c.COMMENT_PEOPLEID left join people_user on pu_people_id=p.PEOPLE_ID 
+		<where>
+				<if test="commentCommentId &gt; 0"> and c.COMMENT_COMMENTID=#{commentCommentId} </if>				
+				<if test="commentContent != null and commentContent != ''"> and c.COMMENT_CONTENT=#{commentContent} </if>				
+				<if test="commentPicture != null and commentPicture != ''"> and c.COMMENT_PICTURE=#{commentPicture} </if>				
+				<if test="commentType &gt; 0"> and c.COMMENT_TYPE=#{commentType} </if>				
+				<if test="commentPeopleId &gt; 0"> and c.COMMENT_PEOPLEID=#{commentPeopleId} </if>				
+				<if test="commentPoints &gt; 0"> and c.COMMENT_POINTS=#{commentPoints} </if>				
+				<if test="commentBasicId &gt; 0"> and c.COMMENT_BASICID=#{commentBasicId} </if>				
+				<if test="commentAppId &gt; 0"> and c.COMMENT_APPID=#{commentAppId} </if>				
+				<if test="commentFileName != null and commentFileName != ''"> and c.COMMENT_FILE_NAME=#{commentFileName} </if>				
+				<if test="commentFilePath != null and commentFilePath != ''"> and c.COMMENT_FILE_PATH=#{commentFilePath} </if>				
+				<if test="isAnonymous &gt; 0"> and c.COMMENT_IS_ANONYMOUS=#{isAnonymous} </if>				
+				<if test="commentAudit &gt; -1 and commentAudit !=null"> and c.COMMENT_AUDIT=#{commentAudit} </if>
+				<if test="basicTitle != null and basicTitle != ''"> and b.BASIC_TITLE like CONCAT('%',#{basicTitle},'%') </if>				
+		</where>		
+		order by c.COMMENT_ID desc
+	</select>
+	<select id="sumery" parameterType="net.mingsoft.comment.entity.CommentEntity" resultType="net.mingsoft.comment.bean.CommentSumeryBean">
+		select sum(COMMENT_POINTS) as commentPointsCount,count(comment_id) as commentCount from `comment`  WHERE COMMENT_BASICID=#{commentBasicId}
+	</select>
+	
+	<select id="queryByCategoryId" resultMap="resultMap">
+		select * from comment com
+		left join basic b on b.BASIC_ID = com.COMMENT_BASICID
+		left join category cat on cat.category_id=b.basic_categoryid
+		left join people p on p.PEOPLE_ID = com.COMMENT_PEOPLEID 
+		left join people_user on pu_people_id=p.PEOPLE_ID 
+		where cat.category_id=#{categoryId}
+		order by com.comment_id desc
+	</select>
+</mapper>
